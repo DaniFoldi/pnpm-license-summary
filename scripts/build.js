@@ -4,7 +4,7 @@ import { build, formatMessages } from 'esbuild'
 const { errors, warnings } = await build({
   entryPoints: [ 'src/index.ts' ],
   bundle: true,
-  outfile: 'dist/action.js',
+  outfile: 'dist/index.js',
   format: 'esm',
   target: 'esnext',
   platform: 'node',
