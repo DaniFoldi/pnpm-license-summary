@@ -12,11 +12,11 @@ inputs:
   allowed:
     description: 'Whitelist of allowed licenses'
     required: true
-    default: [MIT]
+    default: ''
   ignored:
     description: 'List of packages to ignore'
     required: false
-    default: []
+    default: ''
 runs:
   using: 'node20'
   main: 'index.js'
