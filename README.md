@@ -5,7 +5,7 @@
 ## Usage
 
 ```yaml
-- uses: pnpm/action-license-summary@v1
+- uses: DaniFoldi/pnpm-license-summary
   with:
     # The path to the pnpm project (default: .)
     path: .
