@@ -1,0 +1,18 @@
+name: Pnpm License Collector
+description: Collect licenses of dependencies, fail if some don't match the whitelist
+inputs:
+  whitelist:
+    description: 'Whitelist of allowed licenses'
+    required: true
+    default: [MIT]
+  ignores:
+    description: 'List of packages to ignore'
+    required: false
+    default: []
+  directory:
+    description: 'Package directory'
+    required: false
+    default: '.'
+runs:
+  using: 'node20'
+  main: 'index.js'
