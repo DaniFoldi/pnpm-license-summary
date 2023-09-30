@@ -3,34 +3,6 @@ import { Table } from 'console-table-printer'
 import { action } from './action'
 
 
-// const allowed_licenses = new Set([
-//   'MIT',
-//   'ISC',
-//   'BSD-2-Clause',
-//   'BSD-3-Clause',
-//   'Apache-2.0',
-//   'MIT OR Apache-2.0',
-//   'Python-2.0',
-//   'public domain',
-//   '(MIT OR WTFPL)',
-//   'Unlicense',
-//   'BlueOak-1.0.0',
-//   'Public Domain',
-//   '(BSD-3-Clause OR GPL-2.0)',
-//   '(BSD-2-Clause OR MIT OR Apache-2.0)',
-//   '(MIT OR CC0-1.0)',
-//   '0BSD',
-//   'CC0-1.0',
-//   'MPL-2.0'
-// ])
-
-// const ignored_packages = [
-//   { name: 'filter-iterator', version: '0.0.1' },
-//   { name: 'do-taskmanager', version: '2.0.0-rc.0' },
-//   { name: 'flareutils', version: '0.3.4' },
-//   { name: 'spdx-exceptions', version: '2.3.0' }
-// ]
-
 try {
   const directory = (getInput('directory', { required: false, trimWhitespace: true }) || '.').replaceAll('\'', '')
   const allowed_licenses = new Set(getMultilineInput('allowed', { required: false }) ?? [])
