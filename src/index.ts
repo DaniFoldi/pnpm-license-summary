@@ -33,8 +33,8 @@ import { action } from './action'
 
 try {
   const directory = (getInput('directory', { required: false, trimWhitespace: true }) || '.').replaceAll('\'', '')
-  const allowed_licenses = new Set(getMultilineInput('allowed_licenses', { required: false }) ?? [])
-  const ignored_packages = new Set(getMultilineInput('ignored_packages', { required: false }).map(pkg => {
+  const allowed_licenses = new Set(getMultilineInput('allowed', { required: false }) ?? [])
+  const ignored_packages = new Set(getMultilineInput('ignored', { required: false }).map(pkg => {
     if (!pkg.startsWith('@')) {
       const [ _, name, version ] = pkg.split('@')
       return { name: `@${name}`, version }
@@ -72,9 +72,9 @@ try {
         version: pkg.version,
         license: pkg.license,
         homepage: pkg.homepage
+        // todo include chain `pnpm why <package> --json`
       })))
       info(table.render())
-      // todo print chain `pnpm why <package> --json`
     }
   }
 
