@@ -1,7 +1,9 @@
 name: Pnpm License Collector
+author: DaniFoldi
 description: Collect licenses of dependencies, fail if some don't match the whitelist
-color: yellow
-icon: check-square
+branding:
+  color: yellow
+  icon: check-square
 inputs:
   directory:
     description: 'Package directory'
