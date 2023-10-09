@@ -21,10 +21,6 @@ export async function action(
 
   const licenses = await getLicenses(directory)
 
-  result.licensesUsed = Object.fromEntries(Object.entries(licenses)
-    .map(([ license, packages ]) => ([ license, new Set(packages) ] as const))
-    .sort((a, b) => b[1].size - a[1].size))
-
   ignores: for (const ignored of ignoredPackages) {
     for (const license of Object.keys(licenses)) {
       if (licenses[license].some(pkg => pkg.name === ignored.name && pkg.version === ignored.version)) {
@@ -36,9 +32,19 @@ export async function action(
 
   for (const license of Object.keys(licenses)) {
     licenses[license] = licenses[license]
-      .filter(pkg => ![ ...ignoredPackages ]
-        .some(ignored => ignored.name === pkg.name && ignored.version === pkg.version))
+      .filter(pkg => {
+        for (const { name, version } of ignoredPackages) {
+          if (name === pkg.name && version === pkg.version) {
+            return false
+          }
+        }
+        return true
+      })
   }
+
+  result.licensesUsed = Object.fromEntries(Object.entries(licenses)
+    .map(([ license, packages ]) => ([ license, new Set(packages) ] as const))
+    .sort((a, b) => b[1].size - a[1].size))
 
   const invalidLicenses = new Set(Object.keys(licenses)
     .filter(license => !allowedLicenses.has(license))
