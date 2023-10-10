@@ -22,10 +22,13 @@ try {
     const table = new Table({
       columns: [
         { alignment: 'left', name: 'license', title: 'License' },
-        { alignment: 'right', name: 'packages', title: 'Count' }
+        { alignment: 'right', name: 'count', title: 'Count' }
       ]
     })
-    table.addRows(result.licensesUsed)
+    table.addRows(Object.entries(result.licensesUsed).map(pkg => ({
+      license: pkg[0],
+      count: pkg[1].size
+    })))
     info(table.render())
   } else {
     setFailed('Invalid licenses found')

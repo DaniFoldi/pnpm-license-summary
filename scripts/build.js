@@ -18,7 +18,6 @@ const { errors, warnings } = await build({
         const __dirname = pathDirname(__filename);
         `
   },
-  minify: true,
   metafile: true
 })
 
