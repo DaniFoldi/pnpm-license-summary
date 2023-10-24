@@ -2,7 +2,7 @@ import { spawn } from 'node:child_process'
 import { resolve } from 'node:path'
 import { cwd } from 'node:process'
 import { debug, isDebug } from '@actions/core'
-import { PackageDetails } from './types'
+import type { PackageDetails } from './types'
 
 /**
  *

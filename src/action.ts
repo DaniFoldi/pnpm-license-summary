@@ -1,5 +1,6 @@
 import { getLicenses } from './get-package-licenses'
-import { AllowedLicenses, IgnoredPackages, Result } from './types'
+import { matchesIgnore } from './ignore'
+import type { AllowedLicenses, IgnoredPackages, Result } from './types'
 
 /**
  *
@@ -22,7 +23,7 @@ export async function action(
   const licenses = await getLicenses(directory)
 
   ignores: for (const ignored of ignoredPackages) {
-    for (const license of Object.keys(licenses)) {
+    for (const [ _, packages ] of Object.entries(licenses)) {
       if (packages.some(pkg => pkg.name === ignored.name && matchesIgnore(pkg.version, ignored.version))) {
         continue ignores
       }
@@ -30,8 +31,8 @@ export async function action(
     result.unusedIgnores.push(`${ignored.name}@${ignored.version}`)
   }
 
-  for (const license of Object.keys(licenses)) {
-    licenses[license] = licenses[license]
+  for (const [ license, packages ] of Object.entries(licenses)) {
+    licenses[license] = packages
       .filter(pkg => {
         for (const { name, version } of ignoredPackages) {
           if (pkg.name === name && matchesIgnore(pkg.version, version)) {
@@ -46,9 +47,10 @@ export async function action(
     .map(([ license, packages ]) => ([ license, new Set(packages) ] as const))
     .sort((a, b) => b[1].size - a[1].size))
 
-  const invalidLicenses = new Set(Object.keys(licenses)
-    .filter(license => !allowedLicenses.has(license))
-    .filter(license => licenses[license].length > 0))
+  const invalidLicenses = new Set(Object.entries(licenses)
+    .filter(([ license ]) => !allowedLicenses.has(license))
+    .filter(([ _, packages ]) => packages.length > 0)
+    .map(([ license ]) => license))
 
   if (invalidLicenses.size > 0) {
     result = {

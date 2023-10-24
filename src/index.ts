@@ -8,16 +8,16 @@ try {
   const allowed_licenses = new Set(getMultilineInput('allowed', { required: false }) ?? [])
   const ignored_packages = new Set(getMultilineInput('ignored', { required: false }).map(pkg => {
     if (pkg.startsWith('@')) {
-      const [ _, name, version ] = pkg.split('@')
+      const [ _, name = '', version = '' ] = pkg.split('@')
       return { name: `@${name}`, version }
     }
-    const [ name, version ] = pkg.split('@')
+    const [ name = '', version = '' ] = pkg.split('@')
     return { name, version }
   }))
 
   const result = await action(directory, allowed_licenses, ignored_packages)
 
-  if (result.success === true) {
+  if (result.success) {
     info('All licenses are valid')
     const table = new Table({
       columns: [
@@ -42,7 +42,11 @@ try {
           { alignment: 'left', name: 'homepage', title: 'Homepage' }
         ]
       })
-      table.addRows([ ...result.licensesUsed[license] ].map(pkg => ({
+      const packages = result.licensesUsed[license]
+      if (!packages) {
+        continue
+      }
+      table.addRows([ ...packages ].map(pkg => ({
         name: pkg.name,
         version: pkg.version,
         license: pkg.license,
@@ -54,5 +58,9 @@ try {
   }
 
 } catch (error) {
-  setFailed(error.message)
+  if (error instanceof Error) {
+    setFailed(error.message)
+  } else {
+    setFailed(error ? error.toString() : 'Unknown error')
+  }
 }
