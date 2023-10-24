@@ -23,7 +23,7 @@ export async function action(
 
   ignores: for (const ignored of ignoredPackages) {
     for (const license of Object.keys(licenses)) {
-      if (licenses[license].some(pkg => pkg.name === ignored.name && pkg.version === ignored.version)) {
+      if (packages.some(pkg => pkg.name === ignored.name && matchesIgnore(pkg.version, ignored.version))) {
         continue ignores
       }
     }
@@ -34,7 +34,7 @@ export async function action(
     licenses[license] = licenses[license]
       .filter(pkg => {
         for (const { name, version } of ignoredPackages) {
-          if (name === pkg.name && version === pkg.version) {
+          if (pkg.name === name && matchesIgnore(pkg.version, version)) {
             return false
           }
         }
