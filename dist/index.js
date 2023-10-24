@@ -3113,6 +3113,19 @@ async function getLicenses(directory) {
   return stdout.startsWith("{") ? JSON.parse(stdout) : {};
 }
 
+// src/ignore.ts
+function matchesIgnore(packageVersion, ignoredVersion) {
+  if (ignoredVersion === "*")
+    return true;
+  if (ignoredVersion === packageVersion)
+    return true;
+  if (ignoredVersion.endsWith("*")) {
+    const prefix = ignoredVersion.slice(0, -1);
+    return packageVersion.startsWith(prefix);
+  }
+  return false;
+}
+
 // src/action.ts
 async function action(directory, allowedLicenses, ignoredPackages) {
   let result = {
@@ -3123,17 +3136,17 @@ async function action(directory, allowedLicenses, ignoredPackages) {
   const licenses = await getLicenses(directory);
   ignores:
     for (const ignored of ignoredPackages) {
-      for (const license of Object.keys(licenses)) {
-        if (licenses[license].some((pkg) => pkg.name === ignored.name && pkg.version === ignored.version)) {
+      for (const [_, packages] of Object.entries(licenses)) {
+        if (packages.some((pkg) => pkg.name === ignored.name && matchesIgnore(pkg.version, ignored.version))) {
           continue ignores;
         }
       }
       result.unusedIgnores.push(`${ignored.name}@${ignored.version}`);
     }
-  for (const license of Object.keys(licenses)) {
-    licenses[license] = licenses[license].filter((pkg) => {
+  for (const [license, packages] of Object.entries(licenses)) {
+    licenses[license] = packages.filter((pkg) => {
       for (const { name, version: version2 } of ignoredPackages) {
-        if (name === pkg.name && version2 === pkg.version) {
+        if (pkg.name === name && matchesIgnore(pkg.version, version2)) {
           return false;
         }
       }
@@ -3141,7 +3154,7 @@ async function action(directory, allowedLicenses, ignoredPackages) {
     });
   }
   result.licensesUsed = Object.fromEntries(Object.entries(licenses).map(([license, packages]) => [license, new Set(packages)]).sort((a, b) => b[1].size - a[1].size));
-  const invalidLicenses = new Set(Object.keys(licenses).filter((license) => !allowedLicenses.has(license)).filter((license) => licenses[license].length > 0));
+  const invalidLicenses = new Set(Object.entries(licenses).filter(([license]) => !allowedLicenses.has(license)).filter(([_, packages]) => packages.length > 0).map(([license]) => license));
   if (invalidLicenses.size > 0) {
     result = {
       ...result,
@@ -3158,14 +3171,14 @@ try {
   const allowed_licenses = new Set((0, import_core2.getMultilineInput)("allowed", { required: false }) ?? []);
   const ignored_packages = new Set((0, import_core2.getMultilineInput)("ignored", { required: false }).map((pkg) => {
     if (pkg.startsWith("@")) {
-      const [_, name2, version3] = pkg.split("@");
+      const [_, name2 = "", version3 = ""] = pkg.split("@");
       return { name: `@${name2}`, version: version3 };
     }
-    const [name, version2] = pkg.split("@");
+    const [name = "", version2 = ""] = pkg.split("@");
     return { name, version: version2 };
   }));
   const result = await action(directory, allowed_licenses, ignored_packages);
-  if (result.success === true) {
+  if (result.success) {
     (0, import_core2.info)("All licenses are valid");
     const table = new import_console_table_printer.Table({
       columns: [
@@ -3190,7 +3203,11 @@ try {
           { alignment: "left", name: "homepage", title: "Homepage" }
         ]
       });
-      table.addRows([...result.licensesUsed[license]].map((pkg) => ({
+      const packages = result.licensesUsed[license];
+      if (!packages) {
+        continue;
+      }
+      table.addRows([...packages].map((pkg) => ({
         name: pkg.name,
         version: pkg.version,
         license: pkg.license,
@@ -3201,5 +3218,9 @@ try {
     }
   }
 } catch (error) {
-  (0, import_core2.setFailed)(error.message);
+  if (error instanceof Error) {
+    (0, import_core2.setFailed)(error.message);
+  } else {
+    (0, import_core2.setFailed)(error ? error.toString() : "Unknown error");
+  }
 }
