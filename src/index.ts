@@ -6,14 +6,16 @@ import { action } from './action'
 try {
   const directory = (getInput('directory', { required: false, trimWhitespace: true }) || '.').replaceAll('\'', '')
   const allowedLicenses = new Set(getMultilineInput('allowed', { required: false }) ?? [])
-  const ignoredPackages = new Set(getMultilineInput('ignored', { required: false }).map(pkg => {
-    if (pkg.startsWith('@')) {
-      const [ _, name = '', version = '' ] = pkg.split('@')
-      return { name: `@${name}`, version }
-    }
-    const [ name = '', version = '' ] = pkg.split('@')
-    return { name, version }
-  }))
+  const ignoredPackages = new Set(getMultilineInput('ignored', { required: false })
+    .map(pkg => pkg.replace(/#.*$/, '').trim())
+    .map(pkg => {
+      if (pkg.startsWith('@')) {
+        const [ _, name = '', version = '' ] = pkg.split('@')
+        return { name: `@${name}`, version }
+      }
+      const [ name = '', version = '' ] = pkg.split('@')
+      return { name, version }
+    }))
 
   const result = await action(directory, allowedLicenses, ignoredPackages)
 
