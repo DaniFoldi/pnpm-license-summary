@@ -1,12 +1,12 @@
-import { setFailed, getMultilineInput, getInput, warning, info } from '@actions/core'
+import { setFailed, getMultilineInput, getInput, warning, info, debug } from '@actions/core'
 import { Table } from 'console-table-printer'
 import { action } from './action'
 
 
 try {
   const directory = (getInput('directory', { required: false, trimWhitespace: true }) || '.').replaceAll('\'', '')
-  const allowedLicenses = new Set(getMultilineInput('allowed', { required: false }) ?? [])
-  const ignoredPackages = new Set(getMultilineInput('ignored', { required: false })
+  const allowedLicenses = new Set(getMultilineInput('allowed', { required: false, trimWhitespace: true }))
+  const ignoredPackages = new Set(getMultilineInput('ignored', { required: false, trimWhitespace: true })
     .map(pkg => pkg.replaceAll(/#.*$/gm, '').trim())
     .map(pkg => {
       if (pkg.startsWith('@')) {
@@ -16,6 +16,10 @@ try {
       const [ name = '', version = '' ] = pkg.split('@')
       return { name, version }
     }))
+
+  debug(`directory: ${directory}`)
+  debug(`allowed: ${[ ...allowedLicenses ].join(', ')}`)
+  debug(`ignored: ${[ ...ignoredPackages ].map(pkg => `${pkg.name}@${pkg.version}`).join(', ')}`)
 
   const result = await action(directory, allowedLicenses, ignoredPackages)
 
@@ -58,7 +62,6 @@ try {
       info(table.render())
     }
   }
-
 } catch (error) {
   if (error instanceof Error) {
     setFailed(error.message)
