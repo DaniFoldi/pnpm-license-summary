@@ -5,8 +5,8 @@ import { action } from './action'
 
 try {
   const directory = (getInput('directory', { required: false, trimWhitespace: true }) || '.').replaceAll('\'', '')
-  const allowed_licenses = new Set(getMultilineInput('allowed', { required: false }) ?? [])
-  const ignored_packages = new Set(getMultilineInput('ignored', { required: false }).map(pkg => {
+  const allowedLicenses = new Set(getMultilineInput('allowed', { required: false }) ?? [])
+  const ignoredPackages = new Set(getMultilineInput('ignored', { required: false }).map(pkg => {
     if (pkg.startsWith('@')) {
       const [ _, name = '', version = '' ] = pkg.split('@')
       return { name: `@${name}`, version }
@@ -15,7 +15,7 @@ try {
     return { name, version }
   }))
 
-  const result = await action(directory, allowed_licenses, ignored_packages)
+  const result = await action(directory, allowedLicenses, ignoredPackages)
 
   if (result.success) {
     info('All licenses are valid')
