@@ -7,7 +7,7 @@ try {
   const directory = (getInput('directory', { required: false, trimWhitespace: true }) || '.').replaceAll('\'', '')
   const allowedLicenses = new Set(getMultilineInput('allowed', { required: false }) ?? [])
   const ignoredPackages = new Set(getMultilineInput('ignored', { required: false })
-    .map(pkg => pkg.replace(/#.*$/, '').trim())
+    .map(pkg => pkg.replaceAll(/#.*$/gm, '').trim())
     .map(pkg => {
       if (pkg.startsWith('@')) {
         const [ _, name = '', version = '' ] = pkg.split('@')
