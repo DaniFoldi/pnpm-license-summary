@@ -14,7 +14,7 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^20.8.10",
+    "@types/node": "^20.9.0",
     "bundled-eslint-config": "^0.2.12",
     "esbuild": "^0.19.5",
     "eslint": "^8.53.0",
