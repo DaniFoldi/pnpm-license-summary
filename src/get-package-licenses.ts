@@ -1,7 +1,6 @@
 import { spawn } from 'node:child_process'
 import { resolve } from 'node:path'
 import { cwd } from 'node:process'
-import { debug, isDebug } from '@actions/core'
 import type { PackageDetails } from './types'
 
 /**
@@ -22,11 +21,6 @@ export async function getLicenses(directory: string): Promise<Record<string, Arr
     proc.on('close', resolve)
     proc.on('error', reject)
   })
-
-  if (isDebug()) {
-    debug('Licenses JSON')
-    debug(stdout)
-  }
 
   return stdout.startsWith('{') ? JSON.parse(stdout) : {}
 }
