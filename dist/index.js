@@ -2155,10 +2155,10 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
       error(message);
     }
     exports.setFailed = setFailed2;
-    function isDebug2() {
+    function isDebug() {
       return process.env["RUNNER_DEBUG"] === "1";
     }
-    exports.isDebug = isDebug2;
+    exports.isDebug = isDebug;
     function debug2(message) {
       command_1.issueCommand("debug", {}, message);
     }
@@ -3088,11 +3088,10 @@ var require_dist2 = __commonJS({
 });
 
 // src/index.ts
-var import_core2 = __toESM(require_core(), 1);
+var import_core = __toESM(require_core(), 1);
 var import_console_table_printer = __toESM(require_dist2(), 1);
 
 // src/get-package-licenses.ts
-var import_core = __toESM(require_core(), 1);
 import { spawn } from "node:child_process";
 import { resolve } from "node:path";
 import { cwd } from "node:process";
@@ -3106,10 +3105,6 @@ async function getLicenses(directory) {
     proc.on("close", resolve2);
     proc.on("error", reject);
   });
-  if ((0, import_core.isDebug)()) {
-    (0, import_core.debug)("Licenses JSON");
-    (0, import_core.debug)(stdout);
-  }
   return stdout.startsWith("{") ? JSON.parse(stdout) : {};
 }
 
@@ -3167,9 +3162,9 @@ async function action(directory, allowedLicenses, ignoredPackages) {
 
 // src/index.ts
 try {
-  const directory = ((0, import_core2.getInput)("directory", { required: false, trimWhitespace: true }) || ".").replaceAll("'", "");
-  const allowed_licenses = new Set((0, import_core2.getMultilineInput)("allowed", { required: false }) ?? []);
-  const ignored_packages = new Set((0, import_core2.getMultilineInput)("ignored", { required: false }).map((pkg) => {
+  const directory = ((0, import_core.getInput)("directory", { required: false, trimWhitespace: true }) || ".").replaceAll("'", "");
+  const allowedLicenses = new Set((0, import_core.getMultilineInput)("allowed", { required: false, trimWhitespace: true }));
+  const ignoredPackages = new Set((0, import_core.getMultilineInput)("ignored", { required: false, trimWhitespace: true }).map((pkg) => pkg.replace(/#.*/, "").trim()).map((pkg) => {
     if (pkg.startsWith("@")) {
       const [_, name2 = "", version3 = ""] = pkg.split("@");
       return { name: `@${name2}`, version: version3 };
@@ -3177,9 +3172,12 @@ try {
     const [name = "", version2 = ""] = pkg.split("@");
     return { name, version: version2 };
   }));
-  const result = await action(directory, allowed_licenses, ignored_packages);
+  (0, import_core.debug)(`directory: ${directory}`);
+  (0, import_core.debug)(`allowed: ${[...allowedLicenses].join(", ")}`);
+  (0, import_core.debug)(`ignored: ${[...ignoredPackages].map((pkg) => `${pkg.name}@${pkg.version}`).join(", ")}`);
+  const result = await action(directory, allowedLicenses, ignoredPackages);
   if (result.success) {
-    (0, import_core2.info)("All licenses are valid");
+    (0, import_core.info)("All licenses are valid");
     const table = new import_console_table_printer.Table({
       columns: [
         { alignment: "left", name: "license", title: "License" },
@@ -3190,11 +3188,11 @@ try {
       license: pkg[0],
       count: pkg[1].size
     })));
-    (0, import_core2.info)(table.render());
+    (0, import_core.info)(table.render());
   } else {
-    (0, import_core2.setFailed)("Invalid licenses found");
+    (0, import_core.setFailed)("Invalid licenses found");
     for (const license of result.invalidLicenses) {
-      (0, import_core2.warning)(`Invalid license ${license}`);
+      (0, import_core.warning)(`Invalid license ${license}`);
       const table = new import_console_table_printer.Table({
         columns: [
           { alignment: "left", name: "name", title: "Name" },
@@ -3214,13 +3212,13 @@ try {
         homepage: pkg.homepage
         // todo include chain `pnpm why <package> --json`
       })));
-      (0, import_core2.info)(table.render());
+      (0, import_core.info)(table.render());
     }
   }
 } catch (error) {
   if (error instanceof Error) {
-    (0, import_core2.setFailed)(error.message);
+    (0, import_core.setFailed)(error.message);
   } else {
-    (0, import_core2.setFailed)(error ? error.toString() : "Unknown error");
+    (0, import_core.setFailed)(error ? error.toString() : "Unknown error");
   }
 }
