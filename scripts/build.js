@@ -16,7 +16,7 @@ const { errors, warnings } = await build({
         const require = topLevelCreateRequire(import.meta.url);
         const __filename = fileURLToPath(import.meta.url);
         const __dirname = pathDirname(__filename);
-        `
+        `.trimStart().replaceAll(/\n\s+/g, '\n')
   },
   metafile: true
 })
