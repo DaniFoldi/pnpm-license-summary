@@ -1,3 +1,4 @@
+import { debug } from '@actions/core'
 import { getLicenses } from './get-package-licenses'
 import { matchesIgnore } from './ignore'
 import type { AllowedLicenses, IgnoredPackages, Result } from './types'
@@ -24,6 +25,11 @@ export async function action(
 
   ignores: for (const ignored of ignoredPackages) {
     for (const [ _, packages ] of Object.entries(licenses)) {
+      if (!packages || !Array.isArray(packages)) {
+        debug(`Something went wrong with ${ignored.name}@${ignored.version}`)
+        debug(`Licenses: ${JSON.stringify(licenses, null, 2)}`)
+        continue
+      }
       if (packages.some(pkg => pkg.name === ignored.name && matchesIgnore(pkg.version, ignored.version))) {
         continue ignores
       }

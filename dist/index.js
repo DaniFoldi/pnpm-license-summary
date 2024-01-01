@@ -1,11 +1,10 @@
+import { fileURLToPath } from 'url';
+import { createRequire as topLevelCreateRequire } from 'module';
+import { dirname as pathDirname } from 'path';
+const require = topLevelCreateRequire(import.meta.url);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = pathDirname(__filename);
 
-        import { fileURLToPath } from 'url';
-        import { createRequire as topLevelCreateRequire } from 'module';
-        import { dirname as pathDirname } from 'path';
-        const require = topLevelCreateRequire(import.meta.url);
-        const __filename = fileURLToPath(import.meta.url);
-        const __dirname = pathDirname(__filename);
-        
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -737,7 +736,7 @@ var require_tunnel = __commonJS({
         connectOptions.headers = connectOptions.headers || {};
         connectOptions.headers["Proxy-Authorization"] = "Basic " + new Buffer(connectOptions.proxyAuth).toString("base64");
       }
-      debug2("making CONNECT request");
+      debug3("making CONNECT request");
       var connectReq = self.request(connectOptions);
       connectReq.useChunkedEncodingByDefault = false;
       connectReq.once("response", onResponse);
@@ -757,7 +756,7 @@ var require_tunnel = __commonJS({
         connectReq.removeAllListeners();
         socket.removeAllListeners();
         if (res.statusCode !== 200) {
-          debug2(
+          debug3(
             "tunneling socket could not be established, statusCode=%d",
             res.statusCode
           );
@@ -769,7 +768,7 @@ var require_tunnel = __commonJS({
           return;
         }
         if (head.length > 0) {
-          debug2("got illegal response body from proxy");
+          debug3("got illegal response body from proxy");
           socket.destroy();
           var error = new Error("got illegal response body from proxy");
           error.code = "ECONNRESET";
@@ -777,13 +776,13 @@ var require_tunnel = __commonJS({
           self.removeSocket(placeholder);
           return;
         }
-        debug2("tunneling connection has established");
+        debug3("tunneling connection has established");
         self.sockets[self.sockets.indexOf(placeholder)] = socket;
         return cb(socket);
       }
       function onError(cause) {
         connectReq.removeAllListeners();
-        debug2(
+        debug3(
           "tunneling socket could not be established, cause=%s\n",
           cause.message,
           cause.stack
@@ -845,9 +844,9 @@ var require_tunnel = __commonJS({
       }
       return target;
     }
-    var debug2;
+    var debug3;
     if (process.env.NODE_DEBUG && /\btunnel\b/.test(process.env.NODE_DEBUG)) {
-      debug2 = function() {
+      debug3 = function() {
         var args = Array.prototype.slice.call(arguments);
         if (typeof args[0] === "string") {
           args[0] = "TUNNEL: " + args[0];
@@ -857,10 +856,10 @@ var require_tunnel = __commonJS({
         console.error.apply(console, args);
       };
     } else {
-      debug2 = function() {
+      debug3 = function() {
       };
     }
-    exports.debug = debug2;
+    exports.debug = debug3;
   }
 });
 
@@ -2159,10 +2158,10 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
       return process.env["RUNNER_DEBUG"] === "1";
     }
     exports.isDebug = isDebug;
-    function debug2(message) {
+    function debug3(message) {
       command_1.issueCommand("debug", {}, message);
     }
-    exports.debug = debug2;
+    exports.debug = debug3;
     function error(message, properties = {}) {
       command_1.issueCommand("error", utils_1.toCommandProperties(properties), message instanceof Error ? message.toString() : message);
     }
@@ -2239,9 +2238,9 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
   }
 });
 
-// node_modules/.pnpm/console-table-printer@2.11.2/node_modules/console-table-printer/dist/src/utils/colored-console-line.js
+// node_modules/.pnpm/console-table-printer@2.12.0/node_modules/console-table-printer/dist/src/utils/colored-console-line.js
 var require_colored_console_line = __commonJS({
-  "node_modules/.pnpm/console-table-printer@2.11.2/node_modules/console-table-printer/dist/src/utils/colored-console-line.js"(exports) {
+  "node_modules/.pnpm/console-table-printer@2.12.0/node_modules/console-table-printer/dist/src/utils/colored-console-line.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.DEFAULT_COLOR_MAP = void 0;
@@ -2273,9 +2272,9 @@ var require_colored_console_line = __commonJS({
   }
 });
 
-// node_modules/.pnpm/console-table-printer@2.11.2/node_modules/console-table-printer/dist/src/utils/table-constants.js
+// node_modules/.pnpm/console-table-printer@2.12.0/node_modules/console-table-printer/dist/src/utils/table-constants.js
 var require_table_constants = __commonJS({
-  "node_modules/.pnpm/console-table-printer@2.11.2/node_modules/console-table-printer/dist/src/utils/table-constants.js"(exports) {
+  "node_modules/.pnpm/console-table-printer@2.12.0/node_modules/console-table-printer/dist/src/utils/table-constants.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.DEFAULT_HEADER_ALIGNMENT = exports.DEFAULT_ROW_ALIGNMENT = exports.DEFAULT_HEADER_FONT_COLOR = exports.DEFAULT_ROW_FONT_COLOR = exports.COLORS = exports.ALIGNMENTS = exports.DEFAULT_TABLE_STYLE = exports.DEFAULT_ROW_SEPARATOR = exports.DEFAULT_COLUMN_LEN = void 0;
@@ -2334,9 +2333,9 @@ var require_table_constants = __commonJS({
   }
 });
 
-// node_modules/.pnpm/console-table-printer@2.11.2/node_modules/console-table-printer/dist/src/internalTable/input-converter.js
+// node_modules/.pnpm/console-table-printer@2.12.0/node_modules/console-table-printer/dist/src/internalTable/input-converter.js
 var require_input_converter = __commonJS({
-  "node_modules/.pnpm/console-table-printer@2.11.2/node_modules/console-table-printer/dist/src/internalTable/input-converter.js"(exports) {
+  "node_modules/.pnpm/console-table-printer@2.12.0/node_modules/console-table-printer/dist/src/internalTable/input-converter.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.rawColumnToInternalColumn = exports.objIfExists = void 0;
@@ -2605,9 +2604,9 @@ var require_dist = __commonJS({
   }
 });
 
-// node_modules/.pnpm/console-table-printer@2.11.2/node_modules/console-table-printer/dist/src/utils/console-utils.js
+// node_modules/.pnpm/console-table-printer@2.12.0/node_modules/console-table-printer/dist/src/utils/console-utils.js
 var require_console_utils = __commonJS({
-  "node_modules/.pnpm/console-table-printer@2.11.2/node_modules/console-table-printer/dist/src/utils/console-utils.js"(exports) {
+  "node_modules/.pnpm/console-table-printer@2.12.0/node_modules/console-table-printer/dist/src/utils/console-utils.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.findWidthInConsole = exports.stripAnsi = void 0;
@@ -2632,32 +2631,14 @@ var require_console_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/console-table-printer@2.11.2/node_modules/console-table-printer/dist/src/utils/string-utils.js
+// node_modules/.pnpm/console-table-printer@2.12.0/node_modules/console-table-printer/dist/src/utils/string-utils.js
 var require_string_utils = __commonJS({
-  "node_modules/.pnpm/console-table-printer@2.11.2/node_modules/console-table-printer/dist/src/utils/string-utils.js"(exports) {
+  "node_modules/.pnpm/console-table-printer@2.12.0/node_modules/console-table-printer/dist/src/utils/string-utils.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.biggestWordInSentence = exports.limitWidth = exports.textWithPadding = void 0;
+    exports.biggestWordInSentence = exports.textWithPadding = exports.splitTextIntoTextsOfMinLen = void 0;
     var console_utils_1 = require_console_utils();
-    var textWithPadding = (text, alignment, columnLen, charLength) => {
-      const curTextSize = (0, console_utils_1.findWidthInConsole)(text, charLength);
-      const leftPadding = Math.floor((columnLen - curTextSize) / 2);
-      const rightPadding = columnLen - leftPadding - curTextSize;
-      if (columnLen < curTextSize) {
-        return text;
-      }
-      switch (alignment) {
-        case "left":
-          return text.concat(" ".repeat(columnLen - curTextSize));
-        case "center":
-          return " ".repeat(leftPadding).concat(text).concat(" ".repeat(rightPadding));
-        case "right":
-        default:
-          return " ".repeat(columnLen - curTextSize).concat(text);
-      }
-    };
-    exports.textWithPadding = textWithPadding;
-    var limitWidth = (inpStr, width, charLength) => {
+    var splitTextIntoTextsOfMinLen = (inpStr, width, charLength) => {
       const ret = [];
       const spaceSeparatedStrings = inpStr.split(" ");
       let now = [];
@@ -2676,15 +2657,37 @@ var require_string_utils = __commonJS({
       ret.push(now.join(" "));
       return ret;
     };
-    exports.limitWidth = limitWidth;
+    exports.splitTextIntoTextsOfMinLen = splitTextIntoTextsOfMinLen;
+    var textWithPadding = (text, alignment, columnLen, charLength) => {
+      const curTextSize = (0, console_utils_1.findWidthInConsole)(text, charLength);
+      const leftPadding = Math.floor((columnLen - curTextSize) / 2);
+      const rightPadding = columnLen - leftPadding - curTextSize;
+      if (columnLen < curTextSize) {
+        const splittedLines = (0, exports.splitTextIntoTextsOfMinLen)(text, columnLen);
+        if (splittedLines.length === 1) {
+          return text;
+        }
+        return splittedLines.map((singleLine) => (0, exports.textWithPadding)(singleLine, alignment, columnLen, charLength)).join("\n");
+      }
+      switch (alignment) {
+        case "left":
+          return text.concat(" ".repeat(columnLen - curTextSize));
+        case "center":
+          return " ".repeat(leftPadding).concat(text).concat(" ".repeat(rightPadding));
+        case "right":
+        default:
+          return " ".repeat(columnLen - curTextSize).concat(text);
+      }
+    };
+    exports.textWithPadding = textWithPadding;
     var biggestWordInSentence = (inpStr, charLength) => inpStr.split(" ").reduce((a, b) => Math.max(a, (0, console_utils_1.findWidthInConsole)(b, charLength)), 0);
     exports.biggestWordInSentence = biggestWordInSentence;
   }
 });
 
-// node_modules/.pnpm/console-table-printer@2.11.2/node_modules/console-table-printer/dist/src/utils/table-helpers.js
+// node_modules/.pnpm/console-table-printer@2.12.0/node_modules/console-table-printer/dist/src/utils/table-helpers.js
 var require_table_helpers = __commonJS({
-  "node_modules/.pnpm/console-table-printer@2.11.2/node_modules/console-table-printer/dist/src/utils/table-helpers.js"(exports) {
+  "node_modules/.pnpm/console-table-printer@2.12.0/node_modules/console-table-printer/dist/src/utils/table-helpers.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.getWidthLimitedColumnsArray = exports.createHeaderAsRow = exports.renderTableHorizontalBorders = exports.findLenOfColumn = exports.createRow = exports.createColumFromComputedColumn = exports.createColumFromOnlyName = exports.createTableHorizontalBorders = exports.convertRawRowOptionsToStandard = exports.cellText = void 0;
@@ -2765,7 +2768,7 @@ var require_table_helpers = __commonJS({
     var getWidthLimitedColumnsArray = (columns, row, charLength) => {
       const ret = {};
       columns.forEach((column) => {
-        ret[column.name] = (0, string_utils_1.limitWidth)((0, exports.cellText)(row.text[column.name]), column.length || table_constants_1.DEFAULT_COLUMN_LEN, charLength);
+        ret[column.name] = (0, string_utils_1.splitTextIntoTextsOfMinLen)((0, exports.cellText)(row.text[column.name]), column.length || table_constants_1.DEFAULT_COLUMN_LEN, charLength);
       });
       return ret;
     };
@@ -2773,9 +2776,9 @@ var require_table_helpers = __commonJS({
   }
 });
 
-// node_modules/.pnpm/console-table-printer@2.11.2/node_modules/console-table-printer/dist/src/internalTable/table-pre-processors.js
+// node_modules/.pnpm/console-table-printer@2.12.0/node_modules/console-table-printer/dist/src/internalTable/table-pre-processors.js
 var require_table_pre_processors = __commonJS({
-  "node_modules/.pnpm/console-table-printer@2.11.2/node_modules/console-table-printer/dist/src/internalTable/table-pre-processors.js"(exports) {
+  "node_modules/.pnpm/console-table-printer@2.12.0/node_modules/console-table-printer/dist/src/internalTable/table-pre-processors.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.preProcessRows = exports.preProcessColumns = void 0;
@@ -2820,9 +2823,9 @@ var require_table_pre_processors = __commonJS({
   }
 });
 
-// node_modules/.pnpm/console-table-printer@2.11.2/node_modules/console-table-printer/dist/src/internalTable/internal-table-printer.js
+// node_modules/.pnpm/console-table-printer@2.12.0/node_modules/console-table-printer/dist/src/internalTable/internal-table-printer.js
 var require_internal_table_printer = __commonJS({
-  "node_modules/.pnpm/console-table-printer@2.11.2/node_modules/console-table-printer/dist/src/internalTable/internal-table-printer.js"(exports) {
+  "node_modules/.pnpm/console-table-printer@2.12.0/node_modules/console-table-printer/dist/src/internalTable/internal-table-printer.js"(exports) {
     "use strict";
     var __importDefault = exports && exports.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
@@ -2929,9 +2932,9 @@ var require_internal_table_printer = __commonJS({
   }
 });
 
-// node_modules/.pnpm/console-table-printer@2.11.2/node_modules/console-table-printer/dist/src/internalTable/internal-table.js
+// node_modules/.pnpm/console-table-printer@2.12.0/node_modules/console-table-printer/dist/src/internalTable/internal-table.js
 var require_internal_table = __commonJS({
-  "node_modules/.pnpm/console-table-printer@2.11.2/node_modules/console-table-printer/dist/src/internalTable/internal-table.js"(exports) {
+  "node_modules/.pnpm/console-table-printer@2.12.0/node_modules/console-table-printer/dist/src/internalTable/internal-table.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var colored_console_line_1 = require_colored_console_line();
@@ -2961,7 +2964,9 @@ var require_internal_table = __commonJS({
         this.columns = ((_a = options === null || options === void 0 ? void 0 : options.columns) === null || _a === void 0 ? void 0 : _a.map(input_converter_1.rawColumnToInternalColumn)) || this.columns;
         this.rowSeparator = (options === null || options === void 0 ? void 0 : options.rowSeparator) || this.rowSeparator;
         this.charLength = (options === null || options === void 0 ? void 0 : options.charLength) || this.charLength;
-        if (options === null || options === void 0 ? void 0 : options.colorMap) {
+        if (options === null || options === void 0 ? void 0 : options.shouldDisableColors) {
+          this.colorMap = {};
+        } else if (options === null || options === void 0 ? void 0 : options.colorMap) {
           this.colorMap = Object.assign(Object.assign({}, this.colorMap), options.colorMap);
         }
         if (options.rows !== void 0) {
@@ -3024,9 +3029,9 @@ var require_internal_table = __commonJS({
   }
 });
 
-// node_modules/.pnpm/console-table-printer@2.11.2/node_modules/console-table-printer/dist/src/console-table-printer.js
+// node_modules/.pnpm/console-table-printer@2.12.0/node_modules/console-table-printer/dist/src/console-table-printer.js
 var require_console_table_printer = __commonJS({
-  "node_modules/.pnpm/console-table-printer@2.11.2/node_modules/console-table-printer/dist/src/console-table-printer.js"(exports) {
+  "node_modules/.pnpm/console-table-printer@2.12.0/node_modules/console-table-printer/dist/src/console-table-printer.js"(exports) {
     "use strict";
     var __importDefault = exports && exports.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
@@ -3066,9 +3071,9 @@ var require_console_table_printer = __commonJS({
   }
 });
 
-// node_modules/.pnpm/console-table-printer@2.11.2/node_modules/console-table-printer/dist/index.js
+// node_modules/.pnpm/console-table-printer@2.12.0/node_modules/console-table-printer/dist/index.js
 var require_dist2 = __commonJS({
-  "node_modules/.pnpm/console-table-printer@2.11.2/node_modules/console-table-printer/dist/index.js"(exports) {
+  "node_modules/.pnpm/console-table-printer@2.12.0/node_modules/console-table-printer/dist/index.js"(exports) {
     "use strict";
     var __importDefault = exports && exports.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
@@ -3088,8 +3093,11 @@ var require_dist2 = __commonJS({
 });
 
 // src/index.ts
-var import_core = __toESM(require_core(), 1);
+var import_core2 = __toESM(require_core(), 1);
 var import_console_table_printer = __toESM(require_dist2(), 1);
+
+// src/action.ts
+var import_core = __toESM(require_core(), 1);
 
 // src/get-package-licenses.ts
 import { spawn } from "node:child_process";
@@ -3132,6 +3140,9 @@ async function action(directory, allowedLicenses, ignoredPackages) {
   ignores:
     for (const ignored of ignoredPackages) {
       for (const [_, packages] of Object.entries(licenses)) {
+        if (!packages) {
+          (0, import_core.debug)(`Something went wrong with ${ignored.name}@${ignored.version}`);
+        }
         if (packages.some((pkg) => pkg.name === ignored.name && matchesIgnore(pkg.version, ignored.version))) {
           continue ignores;
         }
@@ -3162,9 +3173,9 @@ async function action(directory, allowedLicenses, ignoredPackages) {
 
 // src/index.ts
 try {
-  const directory = ((0, import_core.getInput)("directory", { required: false, trimWhitespace: true }) || ".").replaceAll("'", "");
-  const allowedLicenses = new Set((0, import_core.getMultilineInput)("allowed", { required: false, trimWhitespace: true }));
-  const ignoredPackages = new Set((0, import_core.getMultilineInput)("ignored", { required: false, trimWhitespace: true }).map((pkg) => pkg.replace(/#.*/, "").trim()).map((pkg) => {
+  const directory = ((0, import_core2.getInput)("directory", { required: false, trimWhitespace: true }) || ".").replaceAll("'", "");
+  const allowedLicenses = new Set((0, import_core2.getMultilineInput)("allowed", { required: false, trimWhitespace: true }));
+  const ignoredPackages = new Set((0, import_core2.getMultilineInput)("ignored", { required: false, trimWhitespace: true }).map((pkg) => pkg.replace(/#.*/, "").trim()).map((pkg) => {
     if (pkg.startsWith("@")) {
       const [_, name2 = "", version3 = ""] = pkg.split("@");
       return { name: `@${name2}`, version: version3 };
@@ -3172,12 +3183,12 @@ try {
     const [name = "", version2 = ""] = pkg.split("@");
     return { name, version: version2 };
   }));
-  (0, import_core.debug)(`directory: ${directory}`);
-  (0, import_core.debug)(`allowed: ${[...allowedLicenses].join(", ")}`);
-  (0, import_core.debug)(`ignored: ${[...ignoredPackages].map((pkg) => `${pkg.name}@${pkg.version}`).join(", ")}`);
+  (0, import_core2.debug)(`directory: ${directory}`);
+  (0, import_core2.debug)(`allowed: ${[...allowedLicenses].join(", ")}`);
+  (0, import_core2.debug)(`ignored: ${[...ignoredPackages].map((pkg) => `${pkg.name}@${pkg.version}`).join(", ")}`);
   const result = await action(directory, allowedLicenses, ignoredPackages);
   if (result.success) {
-    (0, import_core.info)("All licenses are valid");
+    (0, import_core2.info)("All licenses are valid");
     const table = new import_console_table_printer.Table({
       columns: [
         { alignment: "left", name: "license", title: "License" },
@@ -3188,11 +3199,11 @@ try {
       license: pkg[0],
       count: pkg[1].size
     })));
-    (0, import_core.info)(table.render());
+    (0, import_core2.info)(table.render());
   } else {
-    (0, import_core.setFailed)("Invalid licenses found");
+    (0, import_core2.setFailed)("Invalid licenses found");
     for (const license of result.invalidLicenses) {
-      (0, import_core.warning)(`Invalid license ${license}`);
+      (0, import_core2.warning)(`Invalid license ${license}`);
       const table = new import_console_table_printer.Table({
         columns: [
           { alignment: "left", name: "name", title: "Name" },
@@ -3212,13 +3223,13 @@ try {
         homepage: pkg.homepage
         // todo include chain `pnpm why <package> --json`
       })));
-      (0, import_core.info)(table.render());
+      (0, import_core2.info)(table.render());
     }
   }
 } catch (error) {
   if (error instanceof Error) {
-    (0, import_core.setFailed)(error.message);
+    (0, import_core2.setFailed)(error.message);
   } else {
-    (0, import_core.setFailed)(error ? error.toString() : "Unknown error");
+    (0, import_core2.setFailed)(error ? error.toString() : "Unknown error");
   }
 }
