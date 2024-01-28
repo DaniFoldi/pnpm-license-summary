@@ -38,6 +38,10 @@ export async function action(
   }
 
   for (const [ license, packages ] of Object.entries(licenses)) {
+    if (!Array.isArray(packages)) {
+      debug(`No packages found using ${license}`)
+      continue
+    }
     licenses[license] = packages
       .filter(pkg => {
         for (const { name, version } of ignoredPackages) {
@@ -50,6 +54,7 @@ export async function action(
   }
 
   result.licensesUsed = Object.fromEntries(Object.entries(licenses)
+    .filter(([ _, packages ]) => Array.isArray(packages))
     .map(([ license, packages ]) => ([ license, new Set(packages) ] as const))
     .sort((a, b) => b[1].size - a[1].size))
 

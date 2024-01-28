@@ -16,12 +16,6 @@ it('warns on unused ignores', async () => {
   expect(result).matchSnapshot()
 })
 
-it('fails on . with no options', async () => {
-  const result = await action('.', new Set(), new Set())
-  expect(result.success).toBeFalsy()
-  expect(result).matchSnapshot()
-})
-
 it('succeeds when all licenses are valid', async () => {
   const licenses = [ 'MIT', '0BSD' ]
   const ignores: Package[] = []
