@@ -19746,14 +19746,14 @@ async function getLicenses(directory) {
 }
 
 // src/ignore.ts
-function matchesIgnore(packageVersion, ignoredVersion) {
-  if (ignoredVersion === "*")
+function matchesIgnore(target, template) {
+  if (template === "*")
     return true;
-  if (ignoredVersion === packageVersion)
+  if (template === target)
     return true;
-  if (ignoredVersion.endsWith("*")) {
-    const prefix = ignoredVersion.slice(0, -1);
-    return packageVersion.startsWith(prefix);
+  if (template.endsWith("*")) {
+    const prefix = template.slice(0, -1);
+    return target.startsWith(prefix);
   }
   return false;
 }
@@ -19774,7 +19774,7 @@ async function action(directory, allowedLicenses, ignoredPackages) {
           (0, import_core.debug)(`Licenses: ${JSON.stringify(licenses, null, 2)}`);
           continue;
         }
-        if (packages.some((pkg) => pkg.name === ignored.name && matchesIgnore(pkg.version, ignored.version))) {
+        if (packages.some((pkg) => matchesIgnore(pkg.name, ignored.name) && matchesIgnore(pkg.version, ignored.version))) {
           continue ignores;
         }
       }
@@ -19783,7 +19783,7 @@ async function action(directory, allowedLicenses, ignoredPackages) {
   for (const [license, packages] of Object.entries(licenses)) {
     licenses[license] = packages.filter((pkg) => {
       for (const { name, version: version2 } of ignoredPackages) {
-        if (pkg.name === name && matchesIgnore(pkg.version, version2)) {
+        if (matchesIgnore(pkg.name, name) && matchesIgnore(pkg.version, version2)) {
           return false;
         }
       }
