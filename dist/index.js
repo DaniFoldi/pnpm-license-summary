@@ -19781,6 +19781,10 @@ async function action(directory, allowedLicenses, ignoredPackages) {
       result.unusedIgnores.push(`${ignored.name}@${ignored.version}`);
     }
   for (const [license, packages] of Object.entries(licenses)) {
+    if (!Array.isArray(packages)) {
+      (0, import_core.debug)(`No packages found using ${license}`);
+      continue;
+    }
     licenses[license] = packages.filter((pkg) => {
       for (const { name, version: version2 } of ignoredPackages) {
         if (matchesIgnore(pkg.name, name) && matchesIgnore(pkg.version, version2)) {
@@ -19790,7 +19794,7 @@ async function action(directory, allowedLicenses, ignoredPackages) {
       return true;
     });
   }
-  result.licensesUsed = Object.fromEntries(Object.entries(licenses).map(([license, packages]) => [license, new Set(packages)]).sort((a, b) => b[1].size - a[1].size));
+  result.licensesUsed = Object.fromEntries(Object.entries(licenses).filter(([_, packages]) => Array.isArray(packages)).map(([license, packages]) => [license, new Set(packages)]).sort((a, b) => b[1].size - a[1].size));
   const invalidLicenses = new Set(Object.entries(licenses).filter(([license]) => !allowedLicenses.has(license)).filter(([_, packages]) => packages.length > 0).map(([license]) => license));
   if (invalidLicenses.size > 0) {
     result = {
