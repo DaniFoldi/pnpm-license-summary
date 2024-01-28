@@ -14,13 +14,13 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^20.10.6",
+    "@types/node": "^20.11.6",
     "bundled-eslint-config": "^0.2.19",
-    "esbuild": "^0.19.11",
+    "esbuild": "^0.19.12",
     "eslint": "^8.56.0",
     "some-tsconfig-preset": "^1.5.0",
     "typescript": "^5.3.3",
-    "vitest": "^1.1.1"
+    "vitest": "^1.2.1"
   },
   "dependencies": {
     "@actions/core": "^1.10.1",
