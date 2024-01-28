@@ -1,9 +1,9 @@
-export function matchesIgnore(packageVersion: string, ignoredVersion: string): boolean {
-  if (ignoredVersion === '*') return true
-  if (ignoredVersion === packageVersion) return true
-  if (ignoredVersion.endsWith('*')) {
-    const prefix = ignoredVersion.slice(0, -1)
-    return packageVersion.startsWith(prefix)
+export function matchesIgnore(target: string, template: string): boolean {
+  if (template === '*') return true
+  if (template === target) return true
+  if (template.endsWith('*')) {
+    const prefix = template.slice(0, -1)
+    return target.startsWith(prefix)
   }
   return false
 }

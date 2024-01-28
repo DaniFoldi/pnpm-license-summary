@@ -30,7 +30,7 @@ export async function action(
         debug(`Licenses: ${JSON.stringify(licenses, null, 2)}`)
         continue
       }
-      if (packages.some(pkg => pkg.name === ignored.name && matchesIgnore(pkg.version, ignored.version))) {
+      if (packages.some(pkg => matchesIgnore(pkg.name, ignored.name) && matchesIgnore(pkg.version, ignored.version))) {
         continue ignores
       }
     }
@@ -41,7 +41,7 @@ export async function action(
     licenses[license] = packages
       .filter(pkg => {
         for (const { name, version } of ignoredPackages) {
-          if (pkg.name === name && matchesIgnore(pkg.version, version)) {
+          if (matchesIgnore(pkg.name, name) && matchesIgnore(pkg.version, version)) {
             return false
           }
         }
