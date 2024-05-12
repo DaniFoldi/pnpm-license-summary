@@ -19708,10 +19708,19 @@ async function getLicenses(directory) {
     case "9": {
       const result = await runPnpmLicenses(directory);
       const parsedResult = result.startsWith("{") ? JSON.parse(result) : {};
-      return Object.fromEntries(Object.entries(parsedResult).map(([license, packages]) => {
-        const { paths, versions, ...rest } = packages;
-        return [license, versions.map((version2, i) => ({ version: version2, path: paths[i], ...rest }))];
-      }));
+      return Object.entries(parsedResult).map(([license, packages]) => {
+        return packages.map((pkg) => {
+          const { paths, versions, ...rest } = pkg;
+          return versions.map((version2, i) => [license, { version: version2, path: paths[i], ...rest }]);
+        }).flat();
+      }).flat().reduce(
+        function(acc, [license, pkg]) {
+          acc[license] = acc[license] || [];
+          acc[license].push(pkg);
+          return acc;
+        },
+        {}
+      );
     }
     case "8": {
       const result = await runPnpmLicenses(directory);

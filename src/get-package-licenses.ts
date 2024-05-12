@@ -36,13 +36,23 @@ export async function getLicenses(directory: string): Promise<Record<string, Arr
     case '9': {
       const result = await runPnpmLicenses(directory)
       const parsedResult = result.startsWith('{') ? JSON.parse(result) : {}
-      return Object.fromEntries(Object
+      return Object
         .entries(parsedResult)
-        // for each package entry with "versions", return "version" one at a time
-        .map(([license, packages]) => {
-          const { paths, versions, ...rest } = packages as Omit<PackageDetails, 'version' | 'path'> & { versions: string[]; paths: string[] }
-          return [license, versions.map((version, i) => ({ version, path: paths[i], ...rest }))]
-        }))
+        .map(([ license, packages ]) => {
+          return (packages as Array<Omit<PackageDetails, 'version' | 'path'> & { versions: string[]; paths: string[] }>).map(pkg => {
+            const { paths, versions, ...rest } = pkg
+            return versions.map((version, i) => [license, { version, path: paths[i], ...rest }])
+          }).flat()
+        })
+        .flat()
+        .reduce(function(acc, [license, pkg]) {
+          // @ts-expect-error shut up
+          acc[license] = acc[license] || []
+          // @ts-expect-error shut up
+          acc[license].push(pkg)
+          return acc
+          }, {}
+        );
     }
     case '8': {
       const result = await runPnpmLicenses(directory)
