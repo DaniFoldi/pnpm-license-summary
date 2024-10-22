@@ -15,7 +15,7 @@
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^20.16.13",
-    "bundled-eslint-config": "^0.4.2",
+    "bundled-eslint-config": "^0.4.24",
     "esbuild": "^0.23.0",
     "eslint": "^9.13.0",
     "some-tsconfig-preset": "^1.5.0",
