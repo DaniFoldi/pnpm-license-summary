@@ -37,28 +37,32 @@ export async function getLicenses(directory: string): Promise<Record<string, Arr
     case '9': {
       const result = await runPnpmLicenses(directory)
       const parsedResult = result.startsWith('{') ? JSON.parse(result) : {}
+
       return Object
         .entries(parsedResult)
-        .map(([ license, packages ]) => {
-          return (packages as Array<Omit<PackageDetails, 'version' | 'path'> & { versions: string[]; paths: string[] }>).map(pkg => {
+        .flatMap(([ license, packages ]) => {
+          return (packages as Array<Omit<PackageDetails, 'version' | 'path'> & { versions: string[]; paths: string[] }>).flatMap(pkg => {
             const { paths, versions, ...rest } = pkg
-            return versions.map((version, i) => [license, { version, path: paths[i], ...rest }])
-          }).flat()
+
+            return versions.map((version, i) => [ license, { version, path: paths[i], ...rest }])
+          })
         })
-        .flat()
-        .reduce(function(acc, [license, pkg]) {
+        .reduce(function(acc, [ license, pkg ]) {
           // @ts-expect-error shut up
           acc[license] = acc[license] || []
           // @ts-expect-error shut up
           acc[license].push(pkg)
+
           return acc
-          }, {}
-        );
+        }, {})
     }
+
     case '8': {
       const result = await runPnpmLicenses(directory)
+
       return result.startsWith('{') ? JSON.parse(result) : {}
     }
+
     default:
       throw new Error('Unsupported pnpm version, please use pnpm 8 or 9.')
   }

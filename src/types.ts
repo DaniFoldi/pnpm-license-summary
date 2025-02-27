@@ -1,4 +1,4 @@
-export type Package = { name: string; version: string  }
+export type Package = { name: string; version: string }
 export type PackageDetails = Package & { license: string; homepage: string }
 
 export type AllowedLicenses = Set<string>

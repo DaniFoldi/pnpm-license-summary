@@ -11,9 +11,12 @@ try {
     .map(pkg => {
       if (pkg.startsWith('@')) {
         const [ _, name = '', version = '' ] = pkg.split('@')
+
         return { name: `@${name}`, version }
       }
+
       const [ name = '', version = '' ] = pkg.split('@')
+
       return { name, version }
     }))
 
@@ -25,6 +28,7 @@ try {
 
   if (result.success) {
     info('All licenses are valid')
+
     const table = new Table({
       columns: [
         { alignment: 'left', name: 'license', title: 'License' },
@@ -38,8 +42,10 @@ try {
     info(table.render())
   } else {
     setFailed('Invalid licenses found')
+
     for (const license of result.invalidLicenses) {
       warning(`Invalid license ${license}`)
+
       const table = new Table({
         columns: [
           { alignment: 'left', name: 'name', title: 'Name' },
@@ -52,6 +58,7 @@ try {
       if (!packages) {
         continue
       }
+
       table.addRows([ ...packages ].map(pkg => ({
         name: pkg.name,
         version: pkg.version,
