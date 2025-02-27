@@ -16,7 +16,7 @@
   "devDependencies": {
     "@types/node": "^20.17.19",
     "bundled-eslint-config": "^0.4.24",
-    "esbuild": "^0.24.2",
+    "esbuild": "^0.25.0",
     "eslint": "^9.21.0",
     "some-tsconfig-preset": "^1.6.0",
     "typescript": "^5.7.3",
