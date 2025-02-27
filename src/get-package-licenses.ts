@@ -33,6 +33,7 @@ export async function getLicenses(directory: string): Promise<Record<string, Arr
   const major = (await getPnpmVersion()).split('.', 1).join('')
 
   switch (major) {
+    case '10':
     case '9': {
       const result = await runPnpmLicenses(directory)
       const parsedResult = result.startsWith('{') ? JSON.parse(result) : {}
