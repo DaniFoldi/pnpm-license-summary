@@ -15,7 +15,7 @@
   "license": "MIT",
   "devDependencies": {
     "@types/node": "22.13.9",
-    "bundled-eslint-config": "0.5.15",
+    "bundled-eslint-config": "0.5.19",
     "esbuild": "0.25.0",
     "eslint": "9.21.0",
     "jiti": "^2.4.2",
