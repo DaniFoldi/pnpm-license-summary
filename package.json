@@ -25,6 +25,6 @@
   },
   "dependencies": {
     "@actions/core": "^1.11.1",
-    "console-table-printer": "^2.12.1"
+    "console-table-printer": "^2.13.0"
   }
 }
