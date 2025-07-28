@@ -14,11 +14,11 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "22.15.33",
+    "@types/node": "22.16.5",
     "bundled-eslint-config": "0.5.19",
     "esbuild": "0.25.0",
-    "eslint": "9.29.0",
-    "jiti": "^2.4.2",
+    "eslint": "9.31.0",
+    "jiti": "^2.5.1",
     "some-tsconfig-preset": "1.8.0",
     "typescript": "5.8.3",
     "vitest": "3.0.7"
