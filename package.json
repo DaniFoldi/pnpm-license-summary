@@ -20,7 +20,7 @@
     "eslint": "9.39.2",
     "some-tsconfig-preset": "1.8.0",
     "typescript": "5.8.3",
-    "vitest": "3.0.7"
+    "vitest": "4.1.2"
   },
   "dependencies": {
     "@actions/core": "^1.11.1",
