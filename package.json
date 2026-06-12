@@ -19,7 +19,7 @@
     "esbuild": "0.28.0",
     "eslint": "10.2.0",
     "some-tsconfig-preset": "1.9.0",
-    "typescript": "5.8.3",
+    "typescript": "6.0.3",
     "vitest": "3.0.7"
   },
   "dependencies": {
