@@ -13,13 +13,47 @@ async function runPnpmLicenses(directory: string): Promise<string> {
   let stdout = ''
   proc.stdout.on('data', data => stdout += data.toString())
 
-  // eslint-disable-next-line promise/avoid-new
   await new Promise((resolve, reject) => {
     proc.on('close', resolve)
     proc.on('error', reject)
   })
 
   return stdout
+}
+
+
+export function parseLicensesJson(result: string): Record<string, Array<PackageDetails>> {
+  const parsedResult = result.startsWith('{') ? JSON.parse(result) : {}
+
+  if (parsedResult && typeof parsedResult === 'object' && 'error' in parsedResult && parsedResult.error && typeof parsedResult.error === 'object') {
+    const { code, message } = parsedResult.error as { code?: string; message?: string }
+
+    throw new Error(`pnpm licenses ls failed${code ? ` (${code})` : ''}: ${message ?? 'unknown error'}`)
+  }
+
+  return Object
+    .entries(parsedResult)
+    .flatMap(([ license, packages ]) => {
+      if (!Array.isArray(packages)) {
+        return []
+      }
+
+      return packages.flatMap(pkg => {
+        const { paths, versions, ...rest } = pkg
+
+        if (!Array.isArray(versions) || !Array.isArray(paths)) {
+          return []
+        }
+
+        return versions.map((version, i) => [ license, { version, path: paths[i], ...rest }])
+      })
+    })
+    .reduce((acc: Record<string, Array<PackageDetails>>, [ license, pkg ]) => {
+      acc[license] = acc[license] ?? []
+      acc[license].push(pkg as PackageDetails)
+
+      return acc
+    }, {})
 }
 
 
@@ -35,28 +69,8 @@ export async function getLicenses(directory: string): Promise<Record<string, Arr
   switch (major) {
     case '11':
     case '10':
-    case '9': {
-      const result = await runPnpmLicenses(directory)
-      const parsedResult = result.startsWith('{') ? JSON.parse(result) : {}
-
-      return Object
-        .entries(parsedResult)
-        .flatMap(([ license, packages ]) => {
-          return (packages as Array<Omit<PackageDetails, 'version' | 'path'> & { versions: string[]; paths: string[] }>).flatMap(pkg => {
-            const { paths, versions, ...rest } = pkg
-
-            return versions.map((version, i) => [ license, { version, path: paths[i], ...rest }])
-          })
-        })
-        .reduce(function(acc, [ license, pkg ]) {
-          // @ts-expect-error shut up
-          acc[license] = acc[license] || []
-          // @ts-expect-error shut up
-          acc[license].push(pkg)
-
-          return acc
-        }, {})
-    }
+    case '9':
+      return parseLicensesJson(await runPnpmLicenses(directory))
 
     case '8': {
       const result = await runPnpmLicenses(directory)

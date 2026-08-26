@@ -20017,25 +20017,36 @@ async function runPnpmLicenses(directory) {
   });
   return stdout;
 }
+function parseLicensesJson(result) {
+  const parsedResult = result.startsWith("{") ? JSON.parse(result) : {};
+  if (parsedResult && typeof parsedResult === "object" && "error" in parsedResult && parsedResult.error && typeof parsedResult.error === "object") {
+    const { code, message } = parsedResult.error;
+    throw new Error(`pnpm licenses ls failed${code ? ` (${code})` : ""}: ${message ?? "unknown error"}`);
+  }
+  return Object.entries(parsedResult).flatMap(([license, packages]) => {
+    if (!Array.isArray(packages)) {
+      return [];
+    }
+    return packages.flatMap((pkg) => {
+      const { paths, versions, ...rest } = pkg;
+      if (!Array.isArray(versions) || !Array.isArray(paths)) {
+        return [];
+      }
+      return versions.map((version, i) => [license, { version, path: paths[i], ...rest }]);
+    });
+  }).reduce((acc, [license, pkg]) => {
+    acc[license] = acc[license] ?? [];
+    acc[license].push(pkg);
+    return acc;
+  }, {});
+}
 async function getLicenses(directory) {
   const major = (await getPnpmVersion()).split(".", 1).join("");
   switch (major) {
     case "11":
     case "10":
-    case "9": {
-      const result = await runPnpmLicenses(directory);
-      const parsedResult = result.startsWith("{") ? JSON.parse(result) : {};
-      return Object.entries(parsedResult).flatMap(([license, packages]) => {
-        return packages.flatMap((pkg) => {
-          const { paths, versions, ...rest } = pkg;
-          return versions.map((version, i) => [license, { version, path: paths[i], ...rest }]);
-        });
-      }).reduce(function(acc, [license, pkg]) {
-        acc[license] = acc[license] || [];
-        acc[license].push(pkg);
-        return acc;
-      }, {});
-    }
+    case "9":
+      return parseLicensesJson(await runPnpmLicenses(directory));
     case "8": {
       const result = await runPnpmLicenses(directory);
       return result.startsWith("{") ? JSON.parse(result) : {};
