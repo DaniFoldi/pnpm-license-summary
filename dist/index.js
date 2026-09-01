@@ -20043,6 +20043,7 @@ function parseLicensesJson(result) {
 async function getLicenses(directory) {
   const major = (await getPnpmVersion()).split(".", 1).join("");
   switch (major) {
+    case "12":
     case "11":
     case "10":
     case "9":
@@ -20052,7 +20053,7 @@ async function getLicenses(directory) {
       return result.startsWith("{") ? JSON.parse(result) : {};
     }
     default:
-      throw new Error("Unsupported pnpm version, please use pnpm 8 or 9.");
+      throw new Error("Unsupported pnpm version, please use pnpm 8-12.");
   }
 }
 
