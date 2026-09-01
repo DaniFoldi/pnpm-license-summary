@@ -67,6 +67,7 @@ export async function getLicenses(directory: string): Promise<Record<string, Arr
   const major = (await getPnpmVersion()).split('.', 1).join('')
 
   switch (major) {
+    case '12':
     case '11':
     case '10':
     case '9':
@@ -79,6 +80,6 @@ export async function getLicenses(directory: string): Promise<Record<string, Arr
     }
 
     default:
-      throw new Error('Unsupported pnpm version, please use pnpm 8 or 9.')
+      throw new Error('Unsupported pnpm version, please use pnpm 8-12.')
   }
 }
