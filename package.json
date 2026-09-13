@@ -14,12 +14,12 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "24.10.7",
+    "@types/node": "24.13.4",
     "bundled-eslint-config": "0.8.1",
     "esbuild": "0.28.1",
-    "eslint": "10.2.0",
+    "eslint": "10.10.0",
     "some-tsconfig-preset": "1.9.0",
-    "typescript": "5.8.3",
+    "typescript": "5.9.3",
     "vitest": "3.2.6"
   },
   "dependencies": {
